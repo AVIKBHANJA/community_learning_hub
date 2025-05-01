@@ -2,14 +2,16 @@ services:
   - type: web
     name: community-learning-hub-api
     runtime: node
+    nodeVersion: 18.x
     plan: free
     buildCommand: npm install
     startCommand: npm start
+    rootDir: backend
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000
+        value: 5000
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
