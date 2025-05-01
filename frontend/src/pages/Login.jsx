@@ -55,12 +55,14 @@ const Login = () => {
 
             {/* Content */}
             <div className="relative z-10 text-center">
-              <div className="w-20 h-20 mx-auto bg-white rounded-full shadow-lg mb-6 flex items-center justify-center">
-                <div className="w-14 h-14 bg-gradient-to-br from-primary-600 to-primary-400 rounded-full flex items-center justify-center shadow-inner">
-                  <span className="text-white font-bold text-2xl">LH</span>
+              <div className="w-auto h-20 mx-auto bg-white rounded-full shadow-lg mb-6 flex items-center justify-center px-6">
+                <div className="bg-gradient-to-br from-primary-600 to-primary-400 rounded-full flex items-center justify-center shadow-inner py-2 px-4">
+                  <span className="text-black font-bold text-lg">
+                    Community Learning
+                  </span>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-12">
+              <h2 className="text-2xl font-bold text-black mb-12">
                 Community Learning Hub
               </h2>
             </div>
@@ -340,49 +342,6 @@ const Login = () => {
                   </button>
                 </div>
               </form>
-
-              {/* Alternative login methods */}
-              <div className="mt-8">
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300"></div>
-                  </div>
-                  <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    className="w-full inline-flex justify-center py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    <svg
-                      className="h-5 w-5 mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z" />
-                    </svg>
-                    Google
-                  </button>
-                  <button
-                    type="button"
-                    className="w-full inline-flex justify-center py-2.5 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    <svg
-                      className="h-5 w-5 mr-2"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2C6.477 2 2 6.477 2 12.001c0 4.86 3.154 8.983 7.523 10.437.55.102.75-.239.75-.53 0-.26-.009-.952-.014-1.87-3.06.666-3.705-1.475-3.705-1.475-.5-1.27-1.221-1.607-1.221-1.607-.998-.683.075-.67.075-.67 1.105.078 1.685 1.134 1.685 1.134.981 1.68 2.573 1.195 3.2.914.1-.71.39-1.196.7-1.47-2.442-.278-5.01-1.222-5.01-5.437 0-1.2.428-2.183 1.132-2.952-.114-.278-.49-1.397.108-2.91 0 0 .923-.297 3.025 1.127A10.536 10.536 0 0 1 12 6.605c.934 0 1.874.126 2.751.37 2.1-1.424 3.022-1.128 3.022-1.128.6 1.514.223 2.633.11 2.911.705.769 1.13 1.751 1.13 2.952 0 4.226-2.572 5.156-5.022 5.428.394.34.747 1.01.747 2.037 0 1.47-.014 2.657-.014 3.017 0 .295.199.637.756.53C19.851 20.979 23 16.859 23 12.001 23 6.477 18.523 2 12 2z"></path>
-                    </svg>
-                    GitHub
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>

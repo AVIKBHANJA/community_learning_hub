@@ -43,10 +43,10 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 transition-transform duration-300 hover:scale-105"
           >
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-primary-500/20">
-              LH
+            <div className="w-auto h-9 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-black font-bold text-sm shadow-md shadow-primary-500/20 px-3 py-1">
+              Community Learning
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent hidden sm:inline-block">
+            <span className="text-xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-black hidden sm:inline-block">
               Learning Hub
             </span>
           </Link>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
+import { creditService } from "../services/api";
 
 // Create the context
 const CreditContext = createContext();
@@ -19,84 +20,42 @@ export const CreditProvider = ({ children }) => {
   useEffect(() => {
     // Only fetch credits data if user is authenticated
     if (isAuthenticated && currentUser) {
-      // Set initial credits from user data
-      setCredits(currentUser.credits || 0);
-      // Fetch transaction history (would be an API call in a real app)
-      fetchTransactionHistory();
+      // Fetch current credit balance and transaction history
+      fetchCreditData();
     } else {
       setCredits(0);
       setTransactions([]);
+      setLoading(false);
     }
-    setLoading(false);
   }, [isAuthenticated, currentUser]);
 
-  // Mock transactions for frontend development
-  const mockTransactions = [
-    {
-      id: "1",
-      type: "earned",
-      amount: 15,
-      description: "Shared: Introduction to GraphQL",
-      date: "2025-04-25T14:30:00Z",
-    },
-    {
-      id: "2",
-      type: "earned",
-      amount: 5,
-      description: "Commented on: Machine Learning Basics",
-      date: "2025-04-23T09:15:00Z",
-    },
-    {
-      id: "3",
-      type: "earned",
-      amount: 1,
-      description: "Upvoted: JavaScript ES2025 Features",
-      date: "2025-04-21T16:45:00Z",
-    },
-    {
-      id: "4",
-      type: "spent",
-      amount: 200,
-      description: "Purchased: Advanced React Patterns Course",
-      date: "2025-04-19T11:20:00Z",
-    },
-  ];
-
-  // Fetch transaction history
-  const fetchTransactionHistory = async () => {
+  // Fetch credit balance and transaction history
+  const fetchCreditData = async () => {
     try {
-      // This would be an API call in a real app
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setTransactions(mockTransactions);
+      setLoading(true);
+
+      // Get credit balance
+      const balanceResponse = await creditService.getBalance();
+      if (balanceResponse.data.success) {
+        setCredits(balanceResponse.data.balance);
+      }
+
+      // Get transaction history
+      const transactionResponse = await creditService.getTransactions();
+      if (transactionResponse.data.success) {
+        setTransactions(transactionResponse.data.transactions);
+      }
     } catch (error) {
-      console.error("Error fetching transaction history:", error);
+      console.error("Error fetching credit data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Earn credits function
-  const earnCredits = async (amount, description) => {
-    try {
-      // This would be an API call in a real app
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Create new transaction
-      const newTransaction = {
-        id: Date.now().toString(),
-        type: "earned",
-        amount,
-        description,
-        date: new Date().toISOString(),
-      };
-
-      // Update state
-      setCredits((prev) => prev + amount);
-      setTransactions((prev) => [newTransaction, ...prev]);
-
-      return { success: true };
-    } catch (error) {
-      console.error("Error earning credits:", error);
-      return { success: false, error: error.message };
-    }
+  // Earn credits function - this would be handled by backend logic
+  // Frontend just needs to refresh the credit data
+  const refreshCreditData = async () => {
+    await fetchCreditData();
   };
 
   // Spend credits function
@@ -107,26 +66,24 @@ export const CreditProvider = ({ children }) => {
         throw new Error("Insufficient credits");
       }
 
-      // This would be an API call in a real app
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Create new transaction
-      const newTransaction = {
-        id: Date.now().toString(),
-        type: "spent",
+      const response = await creditService.redeemCredits({
         amount,
         description,
-        date: new Date().toISOString(),
-      };
+      });
 
-      // Update state
-      setCredits((prev) => prev - amount);
-      setTransactions((prev) => [newTransaction, ...prev]);
-
-      return { success: true };
+      if (response.data.success) {
+        // Refresh credit data to get updated balance and transactions
+        await fetchCreditData();
+        return { success: true };
+      } else {
+        return { success: false, error: response.data.error };
+      }
     } catch (error) {
       console.error("Error spending credits:", error);
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error.response?.data?.error || error.message,
+      };
     }
   };
 
@@ -134,7 +91,7 @@ export const CreditProvider = ({ children }) => {
     credits,
     transactions,
     loading,
-    earnCredits,
+    refreshCreditData,
     spendCredits,
   };
 
