@@ -26,7 +26,12 @@ const app = express();
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? [process.env.FRONTEND_URL, /\.vercel\.app$/, /\.netlify\.app$/]
+      ? [
+          "https://community-learning-hub-henna.vercel.app",
+          process.env.FRONTEND_URL,
+          /\.vercel\.app$/,
+          /\.netlify\.app$/,
+        ]
       : "http://localhost:5173",
   credentials: true,
   optionsSuccessStatus: 200,

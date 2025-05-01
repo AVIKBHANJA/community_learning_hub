@@ -140,7 +140,7 @@ const Navbar = () => {
                     <div className="px-4 py-3 border-b border-gray-100">
                       <p className="text-sm text-gray-500">Signed in as</p>
                       <p className="text-sm font-medium text-gray-800 truncate">
-                        {user?.email || "user@example.com"}
+                        {isAuthenticated && user?.email ? user.email : "user@example.com"}
                       </p>
                     </div>
                     <div className="py-1">

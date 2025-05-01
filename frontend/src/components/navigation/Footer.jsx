@@ -175,54 +175,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Newsletter sign-up form */}
-        <div className="py-8 md:py-12 border-t border-gray-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                Subscribe to our newsletter
-              </h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Get the latest updates on new learning paths, features, and
-                community events delivered to your inbox.
-              </p>
-            </div>
-            <div>
-              <form className="sm:flex">
-                <label htmlFor="email-address" className="sr-only">
-                  Email address
-                </label>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="w-full rounded-md border border-gray-300 py-3 px-4 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:max-w-xs"
-                  placeholder="Enter your email"
-                />
-                <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                  <button
-                    type="submit"
-                    className="w-full rounded-md border border-transparent bg-primary-600 py-3 px-6 text-base font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-colors duration-200"
-                  >
-                    Subscribe
-                  </button>
-                </div>
-              </form>
-              <p className="mt-3 text-xs text-gray-500">
-                We care about your data. Read our{" "}
-                <Link
-                  to="/privacy"
-                  className="text-primary-600 hover:text-primary-700 underline"
-                >
-                  Privacy Policy
-                </Link>
-                .
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </footer>
   );
