@@ -5,13 +5,13 @@ const mongoose = require("mongoose");
 const checkDBConnection = () => {
   const state = mongoose.connection.readyState;
   const states = {
-    0: 'disconnected',
-    1: 'connected',
-    2: 'connecting',
-    3: 'disconnecting',
-    99: 'uninitialized'
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+    99: "uninitialized",
   };
-  return states[state] || 'unknown';
+  return states[state] || "unknown";
 };
 
 // @desc    Register user
@@ -24,11 +24,11 @@ exports.register = async (req, res) => {
     // Check database connection
     const dbState = checkDBConnection();
     console.log(`Database connection state during register: ${dbState}`);
-    if (dbState !== 'connected') {
+    if (dbState !== "connected") {
       return res.status(500).json({
         success: false,
         error: "Database connection issue. Please try again later.",
-        details: `Current connection state: ${dbState}`
+        details: `Current connection state: ${dbState}`,
       });
     }
 
@@ -56,29 +56,31 @@ exports.register = async (req, res) => {
     sendTokenResponse(user, 201, res);
   } catch (err) {
     console.error("Registration error:", err);
-    
+
     // Handle validation errors
-    if (err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(val => val.message);
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((val) => val.message);
       return res.status(400).json({
         success: false,
-        error: messages.join(', ')
+        error: messages.join(", "),
       });
     }
-    
+
     // Handle duplicate key errors
     if (err.code === 11000) {
       const field = Object.keys(err.keyValue)[0];
       return res.status(400).json({
         success: false,
-        error: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
+        error: `${
+          field.charAt(0).toUpperCase() + field.slice(1)
+        } already exists`,
       });
     }
 
     res.status(500).json({
       success: false,
       error: "Server error during registration",
-      details: err.message
+      details: err.message,
     });
   }
 };
@@ -93,11 +95,11 @@ exports.login = async (req, res) => {
     // Check database connection
     const dbState = checkDBConnection();
     console.log(`Database connection state during login: ${dbState}`);
-    if (dbState !== 'connected') {
+    if (dbState !== "connected") {
       return res.status(500).json({
         success: false,
         error: "Database connection issue. Please try again later.",
-        details: `Current connection state: ${dbState}`
+        details: `Current connection state: ${dbState}`,
       });
     }
 
@@ -143,7 +145,7 @@ exports.login = async (req, res) => {
     res.status(500).json({
       success: false,
       error: "Server error during login",
-      details: err.message
+      details: err.message,
     });
   }
 };
@@ -156,14 +158,14 @@ exports.getMe = async (req, res) => {
     // Check database connection
     const dbState = checkDBConnection();
     console.log(`Database connection state during getMe: ${dbState}`);
-    if (dbState !== 'connected') {
+    if (dbState !== "connected") {
       return res.status(500).json({
         success: false,
         error: "Database connection issue. Please try again later.",
-        details: `Current connection state: ${dbState}`
+        details: `Current connection state: ${dbState}`,
       });
     }
-    
+
     const user = await User.findById(req.user.id);
 
     res.status(200).json({
@@ -175,7 +177,7 @@ exports.getMe = async (req, res) => {
     res.status(500).json({
       success: false,
       error: "Server error while fetching profile",
-      details: err.message
+      details: err.message,
     });
   }
 };
@@ -184,29 +186,29 @@ exports.getMe = async (req, res) => {
 // @route   GET /api/auth/check-config
 // @access  Public
 exports.checkConfig = (req, res) => {
-  const jwtSecretStatus = process.env.JWT_SECRET ? 
-    `JWT_SECRET is set (length: ${process.env.JWT_SECRET.length})` : 
-    'JWT_SECRET is not set!';
-  
-  const jwtExpireStatus = process.env.JWT_EXPIRE || 'JWT_EXPIRE is not set!';
-  
+  const jwtSecretStatus = process.env.JWT_SECRET
+    ? `JWT_SECRET is set (length: ${process.env.JWT_SECRET.length})`
+    : "JWT_SECRET is not set!";
+
+  const jwtExpireStatus = process.env.JWT_EXPIRE || "JWT_EXPIRE is not set!";
+
   const dbConnState = checkDBConnection();
 
   res.status(200).json({
     success: true,
     config: {
-      environment: process.env.NODE_ENV || 'development',
+      environment: process.env.NODE_ENV || "development",
       database: {
         connectionState: dbConnState,
-        uri: process.env.MONGODB_URI ? 
-          `URI starts with: ${process.env.MONGODB_URI.substring(0, 20)}...` : 
-          'MongoDB URI is undefined'
+        uri: process.env.MONGODB_URI
+          ? `URI starts with: ${process.env.MONGODB_URI.substring(0, 20)}...`
+          : "MongoDB URI is undefined",
       },
       auth: {
         jwtSecret: jwtSecretStatus,
-        jwtExpire: jwtExpireStatus
-      }
-    }
+        jwtExpire: jwtExpireStatus,
+      },
+    },
   });
 };
 
@@ -215,17 +217,17 @@ const sendTokenResponse = (user, statusCode, res) => {
   try {
     // Create token
     if (!process.env.JWT_SECRET) {
-      console.error('JWT_SECRET environment variable is not set!');
+      console.error("JWT_SECRET environment variable is not set!");
       return res.status(500).json({
         success: false,
-        error: "Server configuration error"
+        error: "Server configuration error",
       });
     }
-    
+
     const token = user.getSignedJwtToken();
-    
+
     console.log(`Token generated successfully for user: ${user._id}`);
-    
+
     res.status(statusCode).json({
       success: true,
       token,
@@ -234,15 +236,15 @@ const sendTokenResponse = (user, statusCode, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        credits: user.credits
-      }
+        credits: user.credits,
+      },
     });
   } catch (err) {
-    console.error('Error generating token:', err);
+    console.error("Error generating token:", err);
     res.status(500).json({
       success: false,
       error: "Error generating authentication token",
-      details: err.message
+      details: err.message,
     });
   }
 };

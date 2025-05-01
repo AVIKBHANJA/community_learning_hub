@@ -9,11 +9,13 @@ dotenv.config();
 
 // Connect to MongoDB
 let isDbConnected = false;
-connectDB().then(connected => {
+connectDB().then((connected) => {
   isDbConnected = connected;
-  
-  if (!connected && process.env.NODE_ENV === 'production') {
-    console.warn('Started server despite database connection issues. Will retry connection for requests.');
+
+  if (!connected && process.env.NODE_ENV === "production") {
+    console.warn(
+      "Started server despite database connection issues. Will retry connection for requests."
+    );
   }
 });
 
@@ -61,33 +63,35 @@ app.get("/", (req, res) => {
 // Enhanced health check endpoint for diagnostics
 app.get("/health", async (req, res) => {
   try {
-    const mongoose = require('mongoose');
-    const packageJson = require('./package.json');
-    
+    const mongoose = require("mongoose");
+    const packageJson = require("./package.json");
+
     // Test database connection
     let dbStatus;
     let dbCollections = [];
-    
+
     try {
       // If not connected, try to reconnect
       if (mongoose.connection.readyState !== 1) {
         await connectDB();
       }
-      
+
       const state = mongoose.connection.readyState;
       const states = {
-        0: 'disconnected',
-        1: 'connected',
-        2: 'connecting',
-        3: 'disconnecting',
-        99: 'uninitialized'
+        0: "disconnected",
+        1: "connected",
+        2: "connecting",
+        3: "disconnecting",
+        99: "uninitialized",
       };
-      
-      dbStatus = states[state] || 'unknown';
-      
+
+      dbStatus = states[state] || "unknown";
+
       if (state === 1) {
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        dbCollections = collections.map(c => c.name);
+        const collections = await mongoose.connection.db
+          .listCollections()
+          .toArray();
+        dbCollections = collections.map((c) => c.name);
       }
     } catch (dbError) {
       dbStatus = `Error: ${dbError.message}`;
@@ -95,24 +99,29 @@ app.get("/health", async (req, res) => {
 
     // Check required environment variables
     const envVars = {
-      NODE_ENV: process.env.NODE_ENV || 'not set',
-      PORT: process.env.PORT || 'not set',
-      MONGODB_URI: process.env.MONGODB_URI ? 
-        `${process.env.MONGODB_URI.substring(0, 12)}...${process.env.MONGODB_URI.substring(process.env.MONGODB_URI.length - 10)}` : 
-        'not set',
-      JWT_SECRET: process.env.JWT_SECRET ? 'set (hidden)' : 'not set',
-      JWT_EXPIRE: process.env.JWT_EXPIRE || 'not set',
-      FRONTEND_URL: process.env.FRONTEND_URL || 'not set'
+      NODE_ENV: process.env.NODE_ENV || "not set",
+      PORT: process.env.PORT || "not set",
+      MONGODB_URI: process.env.MONGODB_URI
+        ? `${process.env.MONGODB_URI.substring(
+            0,
+            12
+          )}...${process.env.MONGODB_URI.substring(
+            process.env.MONGODB_URI.length - 10
+          )}`
+        : "not set",
+      JWT_SECRET: process.env.JWT_SECRET ? "set (hidden)" : "not set",
+      JWT_EXPIRE: process.env.JWT_EXPIRE || "not set",
+      FRONTEND_URL: process.env.FRONTEND_URL || "not set",
     };
-    
+
     res.status(200).json({
       status: "healthy",
       timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
+      environment: process.env.NODE_ENV || "development",
       server: {
         version: packageJson.version,
         nodeVersion: process.version,
-        uptime: `${Math.floor(process.uptime())} seconds`
+        uptime: `${Math.floor(process.uptime())} seconds`,
       },
       database: {
         status: dbStatus,
@@ -121,15 +130,15 @@ app.get("/health", async (req, res) => {
       config: envVars,
       cors: {
         origin: corsOptions.origin,
-        credentials: corsOptions.credentials
-      }
+        credentials: corsOptions.credentials,
+      },
     });
   } catch (err) {
-    console.error('Health check error:', err);
+    console.error("Health check error:", err);
     res.status(500).json({
       status: "unhealthy",
       error: err.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
