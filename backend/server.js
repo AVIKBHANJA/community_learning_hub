@@ -28,17 +28,40 @@ const corsOptions = {
     process.env.NODE_ENV === "production"
       ? [
           "https://community-learning-hub-henna.vercel.app",
+          "https://community-learning-hub.onrender.com",
+          "https://community-learning-hub-api.onrender.com",
           process.env.FRONTEND_URL,
           /\.vercel\.app$/,
           /\.netlify\.app$/,
+          /\.onrender\.com$/,
         ]
       : "http://localhost:5173",
   credentials: true,
   optionsSuccessStatus: 200,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  exposedHeaders: ["Content-Range", "X-Content-Range"],
+  preflightContinue: false,
 };
 
 // Middleware
 app.use(cors(corsOptions));
+
+// Handle preflight OPTIONS requests
+app.options("*", cors(corsOptions));
+
+// Custom middleware to ensure CORS headers are set on all responses
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.use(express.json({ limit: "50mb" })); // Increased payload limit for file uploads
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
